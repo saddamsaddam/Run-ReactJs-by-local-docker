@@ -108,7 +108,8 @@ sudo systemctl restart docker
 
    Once the image is rebuilt, run the container again:
    ```bash
-   docker run -p 3000:80 my-react-app
+   docker run -p 3000:80 my-react-app // docker run -d -p 3000:80 my-react-app
+
    ```
 
 6. **Access your app**:
