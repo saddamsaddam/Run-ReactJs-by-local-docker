@@ -92,24 +92,26 @@ sudo systemctl restart docker
    - It copies the contents of the `build/` directory to `/usr/share/nginx/html` in the Nginx container.
 
 3.### ✅ **Move project directory in Ubuntu cmd:**
-    ```bash
-     cd /mnt/c/reactjs/myreactapp/ReactJsProject
-    ```
-3. **Rebuild the Docker image**:
+
+```bash
+ cd /mnt/c/reactjs/myreactapp/ReactJsProject
+```
+
+4. **Rebuild the Docker image**:
 
    After updating the Dockerfile, rebuild the Docker image by running the following command:
    ```bash
    docker build -t my-react-app .
    ```
 
-4. **Run the Docker container again**:
+5. **Run the Docker container again**:
 
    Once the image is rebuilt, run the container again:
    ```bash
    docker run -p 3000:80 my-react-app
    ```
 
-5. **Access your app**:
+6. **Access your app**:
 
    Finally, open your browser and visit:
    ```
