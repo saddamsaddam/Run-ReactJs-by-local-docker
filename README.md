@@ -40,7 +40,34 @@ sudo systemctl restart docker
 
 ### Run react project by docker:
 
-1. **Rebuild your React app**:
+1. **Create nginx.conf in react root project directory:**:
+
+   In your React project directory, run the following command to build your app:
+   ```bash
+      server {
+        listen 80;
+        listen [::]:80;
+        server_name localhost;
+    
+        root /usr/share/nginx/html;
+        index index.html;
+    
+        location / {
+            try_files $uri /index.html;
+        }
+    
+        error_page 404 /index.html;
+    
+        location = /50x.html {
+            root /usr/share/nginx/html;
+        }
+      }
+
+   ```
+
+  
+
+2. **Rebuild your React app**:
 
    In your React project directory, run the following command to build your app:
    ```bash
@@ -49,7 +76,7 @@ sudo systemctl restart docker
 
    This will create a `build/` directory containing the production-ready version of your app.
 
-2. **Update your Dockerfile**:
+3. **create Dockerfile**:
 
    Ensure your `Dockerfile` copies the `build/` directory into the correct location inside the container. Here's an example of what your Dockerfile might look like:
 
@@ -57,32 +84,25 @@ sudo systemctl restart docker
     # Use the official Node.js image as the base image
     FROM node:22 AS build
     
-    # Set the working directory
     WORKDIR /app
     
-    # Copy package.json and package-lock.json to the working directory
     COPY package*.json ./
-    
-    # Install dependencies
     RUN npm install
-    
-    # Copy the rest of the application code to the working directory
     COPY . .
-    
-    # Build the React application
     RUN npm run build
     
-    # Use the official Nginx image to serve the React application
+    # Use the official Nginx image
     FROM nginx:alpine
     
-    # Copy the build output to the Nginx html directory
+    # Copy the updated nginx.conf
+    COPY nginx.conf /etc/nginx/conf.d/default.conf
+    
+    # Copy the build output to Nginx html directory
     COPY --from=build /app/build /usr/share/nginx/html
     
-    # Expose port 80 to make the app accessible
     EXPOSE 80
-    
-    # Start Nginx
     CMD ["nginx", "-g", "daemon off;"]
+
 
    ```
 
@@ -91,20 +111,20 @@ sudo systemctl restart docker
    - Then, it uses an Nginx image (`nginx:alpine`) to serve the built React app.
    - It copies the contents of the `build/` directory to `/usr/share/nginx/html` in the Nginx container.
 
-3.### ✅ **Move project directory in Ubuntu cmd:**
+4.### ✅ **Move project directory in Ubuntu cmd:**
 
 ```bash
  cd /mnt/c/reactjs/myreactapp/ReactJsProject
 ```
 
-4. **Rebuild the Docker image**:
+5. **Rebuild the Docker image**:
 
    After updating the Dockerfile, rebuild the Docker image by running the following command:
    ```bash
    docker build -t my-react-app .
    ```
 
-5. **Run the Docker container again**:
+6. **Run the Docker container again**:
 
    Once the image is rebuilt, run the container again:
    ```bash
@@ -112,7 +132,7 @@ sudo systemctl restart docker
 
    ```
 
-6. **Access your app**:
+7. **Access your app**:
 
    Finally, open your browser and visit:
    ```
