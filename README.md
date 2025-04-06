@@ -88,6 +88,10 @@ sudo systemctl restart docker
     
     COPY package*.json ./
     RUN npm install
+
+    # Fix permission issues with node binaries
+    RUN chmod -R 755 node_modules/.bin
+
     COPY . .
     RUN npm run build
     
